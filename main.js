@@ -48,10 +48,12 @@ const data = [
     "A crossover, crossover SUV, or crossover utility vehicle (CUV) is a type of sport utility vehicle-like vehicle built with unibody frame construction. A term that originated from North America, crossovers are based on a platform shared with a passenger car, as opposed to a platform shared with a pickup truck. Because of that, crossovers may also be referred as 'car-based SUVs'. Compared to truck-based SUVs, they typically have better interior comfort, a more comfortable ride, better fuel economy, and lower manufacturing costs, but also inferior off-road and towing capability. Forerunners of the modern crossover include the 1977 Matra Rancho and the AMC Eagle introduced in 1979.",
     "Christianity remains culturally diverse in its Western and Eastern branches, as well as in its doctrines concerning justification and the nature of salvation, ecclesiology, ordination, and Christology. The creeds of various Christian denominations generally hold in common Jesus as the Son of God-the Logos incarnated-who ministered, suffered, and died on a cross, but rose from the dead for the salvation of mankind; and referred to as the gospel, meaning the 'good news'. Describing Jesus' life and teachings are the four canonical gospels of Matthew, Mark, Luke and John, with the Old Testament as the gospel's respected background.",
     "Norse or Scandinavian mythology is the body of myths of the North Germanic peoples, stemming from Norse paganism and continuing after the Christianization of Scandinavia, and into the Scandinavian folklore of the modern period. The northernmost extension of Germanic mythology and stemming from Proto-Germanic folklore, Norse mythology consists of tales of various deities, beings, and heroes derived from numerous sources from both before and after the pagan period, including medieval manuscripts, archaeological representations, and folk tradition."
+   , "and for myself"
 ]
 let firstWord = true;
 let stopwatch;
 let currentText = data[Math.floor(Math.random() * data.length)];
+let seek = 0;
 const stats = {
     wrongs: 0,
     rights: 0,
@@ -67,7 +69,10 @@ const runAudio = new CustomAudio('assets/running.mp3', true);
 const fallAudio = new CustomAudio('assets/fall.mp3', true);
 /**update the typing reference paragraph. */
 var updateText = () => {
-    document.querySelector('#type').innerText = currentText;
+    document.querySelector('#type').innerHTML = `<span style="
+    position: absolute;
+    background: transparent;
+">${currentText.slice(0, seek)}_</span>` + (currentText.slice(0, seek) + '<strong>' +currentText.slice(seek, currentText.length) + '</strong>');
 }
 
 /**@argument showAnim is played; while @argument hideAnim is stopped. */
@@ -120,8 +125,13 @@ var startTyping = (char) => {
         case 'Control': break;
         default:
             (firstWord) && (this.startTimer())
-            if (currentText[0] == char.key) {
+            if (currentText[seek] == char.key) {
+                if(stats.words > 2){
                 currentText = currentText.slice(1);
+                }
+                else{
+                    seek++;
+                }
                 stats.rights++;
                 (char.key == " ") && stats.words++;
                 this.showHideAnim(runAnimation, deadAnimation);
@@ -136,7 +146,9 @@ var startTyping = (char) => {
             }
             this.updateText();
     }
-    if (currentText.length == 0) {
+    if (seek >= currentText.length) {
+        currentText= '';
+        this.updateText();
         stats.words++;
         clearInterval(stopwatch);
         document.querySelector('canvas').style.display = 'none';
@@ -180,7 +192,7 @@ var pixiInit = () => {
     document.body.appendChild(app.view);
     runAnimation = this.animationBase("Run", app.stage, false, 0.2, true, false);
     deadAnimation = this.animationBase("Dead", app.stage, false, 0.3, false, false);
-    idleAnimation = this.animationBase("Idle", app.stage, true, 0.2, true, false);
+    idleAnimation = this.animationBase("Idle", app.stage, true, 0.2, true, true);
 }
 
 this.updateText();
