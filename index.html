@@ -1,0 +1,37 @@
+<html>
+
+<head>
+    <style>
+        * {
+            font-size: 30px;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden;
+            background-color: aquamarine;
+        }
+
+        p {
+            white-space: pre;
+            border: 1px solid black;
+        }
+
+        #stats{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <strong>Time:</strong><span id="time">00:00</span> &nbsp;<strong>WPM:</strong><span id="wpm">0</span>
+    </div>
+    <p id="type"></p>
+    <script src="pixi.js"></script> 
+    <script src="main.js"></script>
+    <div id="pixi">
+    </div>
+    <div id="stats">
+        <strong>STATISICS</strong><br>
+    </div>
+</body>
+
+</html>
